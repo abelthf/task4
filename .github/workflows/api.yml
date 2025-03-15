@@ -2,7 +2,7 @@ name: API test and deploy
 on:
   push:
     paths:
-      - 'services/task_api/**'
+      - 'services/tasks_api/**'
       - '.github/workflows/api.yml'
 
 jobs:
