@@ -1,15 +1,15 @@
-name: API test and deploy
+name: API Test and deploy
 on:
   push:
     paths:
       - 'services/tasks_api/**'
       - '.github/workflows/api.yml'
 
-env:
+env:  # neww
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: eu-west-1
   SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-  AWS_DEFAULT_REGION: us-west-1
   APP_ENVIRONMENT: development
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.13]
-        poetry-version: [2.1.1]
+        poetry-version: [1.8.5]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -46,7 +46,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.13]
-        poetry-version: [2.1.1]
+        poetry-version: [1.8.5]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -71,14 +71,13 @@ jobs:
         run: poetry run flake8 .
       - name: Run bandit
         run: poetry run bandit .
-
-  deploy-development:
+  deploy-development:  # new
     needs: [ test, code-quality ]
     strategy:
       fail-fast: false
       matrix:
         python-version: [3.13]
-        poetry-version: [2.1.1]
+        poetry-version: [1.8.5]
         node-version: [22.12]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
@@ -101,12 +100,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Serverless Framework
         run: npm install -g serverless
-      - name: Install NPM dependenies
+      - name: Install NPM dependencies
         run: npm install
       - name: Deploy
         run: sls deploy --stage development --verbose
-
-
-
-
-
