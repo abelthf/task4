@@ -8,6 +8,7 @@ on:
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
   AWS_DEFAULT_REGION: us-west-1
   APP_ENVIRONMENT: development
 
@@ -40,7 +41,6 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-
   code-quality:
     strategy:
       fail-fast: false
@@ -101,10 +101,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Install Serverless Framework
         run: npm install -g serverless
-      - name: Authenticate with Serverless Framework
-        env:
-          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
-        run: serverless config credentials --provider aws --key ${{ secrets.AWS_ACCESS_KEY_ID }} --secret ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Install NPM dependenies
         run: npm install
       - name: Deploy
